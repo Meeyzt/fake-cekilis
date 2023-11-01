@@ -4,6 +4,7 @@ import { ref } from 'vue';
 const showResult = ref(false);
 const names = ref('');
 const results = ref([]);
+const index = ref(0);
 
 function handleRandom() {
   const array = names.value.split(',').map((item) => item.trim());
@@ -11,10 +12,14 @@ function handleRandom() {
   const oznur = array.findIndex((item) => item.toLocaleLowerCase() == 'oznur' || item.toLocaleLowerCase() == 'öznur');
   const aleyna = array.findIndex((item) => item.toLocaleLowerCase() == 'aleyna');
 
-  if(oznur > -1 && aleyna > -1) {
+  if(oznur > -1 && aleyna > -1 && index < 1) {
     results.value.push([array[oznur], array[aleyna]]);
     array.splice(oznur, 1);
     array.splice(aleyna, 1);
+  }
+
+  if(index === 2) {
+    index = 0;
   }
 
   for (let i = 0; i < array.length; i += 2) {
@@ -27,6 +32,7 @@ function handleRandom() {
 
   results.value.sort(() => Math.random() - 0.5);
 
+  index += 1;
   showResult.value = true;
 }
 
