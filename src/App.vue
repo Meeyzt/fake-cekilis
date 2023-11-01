@@ -4,7 +4,14 @@ import { ref } from 'vue';
 const showResult = ref(false);
 const names = ref('');
 const results = ref([]);
-const index = ref(0);
+let index = 0;
+
+function getRandomElement(arr) {
+  const randomIndex = Math.floor(Math.random() * arr.length);
+  const element = arr[randomIndex];
+  arr.splice(randomIndex, 1);  // Seçilen elemanı array'den kaldır
+  return element;
+}
 
 function handleRandom() {
   const array = names.value.split(',').map((item) => item.trim());
@@ -12,21 +19,24 @@ function handleRandom() {
   const oznur = array.findIndex((item) => item.toLocaleLowerCase() == 'oznur' || item.toLocaleLowerCase() == 'öznur');
   const aleyna = array.findIndex((item) => item.toLocaleLowerCase() == 'aleyna');
 
-  if(oznur > -1 && aleyna > -1 && index < 1) {
+  if(oznur > -1 && aleyna > -1 && index < 2) {
     results.value.push([array[oznur], array[aleyna]]);
     array.splice(oznur, 1);
     array.splice(aleyna, 1);
+    console.log('girdi')
   }
 
   if(index === 2) {
     index = 0;
   }
 
-  for (let i = 0; i < array.length; i += 2) {
-    if (i + 1 < array.length) {
-      results.value.push([array[i], array[i + 1]]);
+  while (array.length > 0) {
+    const person1 = getRandomElement(array);
+    const person2 = array.length > 0 ? getRandomElement(array) : null;
+    if (person2) {
+      results.value.push([person1, person2]);
     } else {
-      results.value.push([array[i]]);
+      results.value.push([person1]);
     }
   }
 
