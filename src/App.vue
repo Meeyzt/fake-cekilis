@@ -8,9 +8,24 @@ const results = ref([]);
 function handleRandom() {
   const array = names.value.split(',').map((item) => item.trim());
 
-  results.value.push([array[0], array[2]]);
-  results.value.push([array[4], array[5]]);
-  results.value.push([array[1], array[3]]);
+  const oznur = array.findIndex((item) => item.toLocaleLowerCase() == 'oznur' || item.toLocaleLowerCase() == 'öznur');
+  const aleyna = array.findIndex((item) => item.toLocaleLowerCase() == 'aleyna');
+
+  if(oznur > -1 && aleyna > -1) {
+    results.value.push([array[oznur], array[aleyna]]);
+    array.splice(oznur, 1);
+    array.splice(aleyna, 1);
+  }
+
+  for (let i = 0; i < array.length; i += 2) {
+    if (i + 1 < array.length) {
+      results.value.push([array[i], array[i + 1]]);
+    } else {
+      results.value.push([array[i]]);
+    }
+  }
+
+  results.value.sort(() => Math.random() - 0.5);
 
   showResult.value = true;
 }
@@ -36,7 +51,7 @@ function closeModal() {
           v-model="names"
           rows="10"
           class="block w-full resize-none border-0 text-gray-900 placeholder:text-gray-900 focus:ring-0 sm:text-sm sm:leading-6 outline-none p-2 bg-gray-500"
-          placeholder="İsimleri virgül ile ayırarak giriniz. Örnek: Ayşe, Ali, Mehmet"
+          placeholder="İsimleri virgül ile ayırarak giriniz. Örnek: Ayşe, Ali, Arda, Veli"
         ></textarea>
       </div>
 
@@ -58,7 +73,9 @@ function closeModal() {
           </li>
         </ul>
 
-        <button @click="closeModal" type="button" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 focus:ring-indigo-900 focus:ring-offset-2 focus:ring-2 absolute bottom-4 left-[40%]" >Tekrar Çek</button>
+        <div class="absolute bottom-4 w-full items-center justify-center inset-x-0 px-4">
+          <button @click="closeModal" type="button" class="rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 focus:ring-indigo-900 focus:ring-offset-2 focus:ring-2 w-full">Tekrar Çek</button>
+        </div>
       </div>
     </transition>
   </Teleport>
